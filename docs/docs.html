@@ -29,18 +29,41 @@ dwf doctor</code></pre>
     </div>
 
     <div class="card">
-      <h3>KPIs</h3>
-      <p class="small"><strong>TTS</strong> (Time-to-Signal): time until the first failure or until success if none failed.</p>
-      <p class="small"><strong>TTG</strong> (Time-to-Green): time until the whole pipeline is green (only exists on success).</p>
+  <h3>Key Performance Indicators (KPIs)</h3>
+
+  <p class="small">
+    <strong>dwf</strong> measures two core metrics that describe the speed and quality of your
+    developer feedback loop.
+  </p>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="label">TTS</div>
+      <div class="value">Time-to-Signal</div>
+      <div class="small">
+        How quickly you receive the <em>first useful feedback</em> after running <code>dwf</code>
+        (either a failure or a clean result).
+      </div>
     </div>
 
-    <div class="card">
-      <h3>Pipeline rationale</h3>
-      <p class="small">
-        Cheap checks first: formatting takes milliseconds; compilation and tests can take seconds.
-        This minimizes wasted time and shortens iteration cycles.
-      </p>
+    <div class="stat">
+      <div class="label">TTG</div>
+      <div class="value">Time-to-Green</div>
+      <div class="small">
+        How long it takes until the <em>entire pipeline passes</em>. This is reported only when
+        everything is successful.
+      </div>
     </div>
+
+    <div class="stat">
+      <div class="label">Pipeline</div>
+      <div class="value">fmt → check → clippy → test</div>
+      <div class="small">
+        Cheap checks run first so failures are detected as early as possible.
+      </div>
+    </div>
+  </div>
+</div>
 
     <div class="card">
   <h3>Case Study — Sample Results</h3>
