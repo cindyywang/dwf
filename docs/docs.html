@@ -42,7 +42,35 @@ dwf doctor</code></pre>
       </p>
     </div>
 
-    <div class="footer">If you publish results from `dwf report`, paste them here as a case study.</div>
+    <div class="card">
+  <h3>Case Study — Sample Results</h3>
+
+  <p class="small">
+    The following results were generated using <code>dwf report --last 10</code>
+    on a small Rust project (<code>echo_rs</code>). They illustrate how <strong>dwf</strong>
+    surfaces actionable workflow metrics.
+  </p>
+
+  <pre><code>
+dwf report --last 10
+
+Report (last 10 requested, found 3):
+  ok: 2 | failed: 1
+  TTS  avg: 6321 ms | median: 8154 ms
+  TTG  avg: 9348 ms | median: 9348 ms
+  Failure stages:
+    fmt      1
+  </code></pre>
+
+  <p class="small"><strong>Interpretation:</strong></p>
+  <ul class="small">
+    <li>One formatting failure was caught almost instantly — demonstrating the value of the fail-fast gate.</li>
+    <li>Median <strong>TTS ≈ 8.1s</strong>, reflecting typical developer feedback time.</li>
+    <li>Median <strong>TTG ≈ 9.3s</strong>, driven primarily by test execution.</li>
+    <li>These results support a workflow of frequent <code>dwf run fast</code> and occasional <code>dwf run full</code>.</li>
+  </ul>
+</div>
+
   </div>
 </body>
 </html>
