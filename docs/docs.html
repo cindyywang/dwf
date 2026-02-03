@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>dwf — Docs</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <div><strong>dwf</strong></div>
+      <div>
+        <a href="index.html">Home</a>
+        <a href="download.html">Download</a>
+        <a href="https://github.com/cindyywang/dwf">GitHub</a>
+      </div>
+    </div>
+
+    <h1>Documentation</h1>
+
+    <div class="card">
+      <h3>Commands</h3>
+      <pre><code>dwf init            # create dwf.toml
+dwf run fast        # fmt → check → clippy (fail-fast)
+dwf run full        # fast + tests
+dwf report --last 10
+dwf doctor</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>KPIs</h3>
+      <p class="small"><strong>TTS</strong> (Time-to-Signal): time until the first failure or until success if none failed.</p>
+      <p class="small"><strong>TTG</strong> (Time-to-Green): time until the whole pipeline is green (only exists on success).</p>
+    </div>
+
+    <div class="card">
+      <h3>Pipeline rationale</h3>
+      <p class="small">
+        Cheap checks first: formatting takes milliseconds; compilation and tests can take seconds.
+        This minimizes wasted time and shortens iteration cycles.
+      </p>
+    </div>
+
+    <div class="footer">If you publish results from `dwf report`, paste them here as a case study.</div>
+  </div>
+</body>
+</html>

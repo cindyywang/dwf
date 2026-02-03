@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>dwf — Download</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <div><strong>dwf</strong></div>
+      <div>
+        <a href="index.html">Home</a>
+        <a href="docs.html">Docs</a>
+        <a href="https://github.com/cindyywang/dwf/releases">Releases</a>
+      </div>
+    </div>
+
+    <h1>Download (Linux)</h1>
+    <div class="card">
+      <p class="small">
+        Recommended: download the latest Linux x86_64 tarball from GitHub Releases.
+      </p>
+      <p>
+        <a class="btn" href="https://github.com/cindyywang/dwf/releases/latest">Go to latest release</a>
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Install</h3>
+      <pre><code># 1) download dwf-linux-x86_64.tar.gz from Releases
+tar -xzf dwf-linux-x86_64.tar.gz
+
+# 2) move binary into your PATH
+sudo install -m 0755 dwf /usr/local/bin/dwf
+
+# 3) verify
+dwf --help</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>Use in a Rust project</h3>
+      <pre><code>cd /path/to/your-rust-project
+dwf init
+dwf run fast
+dwf run full
+dwf report --last 10</code></pre>
+    </div>
+
+    <div class="footer">Tip: attach a .sha256 checksum in Releases for integrity verification.</div>
+  </div>
+</body>
+</html>

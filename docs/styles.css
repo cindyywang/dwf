@@ -1,0 +1,18 @@
+:root { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+body { margin: 0; background: #0b0f14; color: #e8eef6; }
+.container { max-width: 980px; margin: 0 auto; padding: 32px 20px; }
+.nav { display:flex; gap:16px; align-items:center; justify-content:space-between; }
+.nav a { color:#e8eef6; text-decoration:none; opacity:.9; }
+.nav a:hover { opacity:1; }
+.hero { padding: 48px 0; }
+.h1 { font-size: 44px; line-height: 1.1; margin: 0 0 12px; }
+.sub { font-size: 18px; opacity: .85; max-width: 70ch; }
+.card { background:#111826; border:1px solid #223047; border-radius: 14px; padding: 18px; margin: 16px 0; }
+.btn { display:inline-block; padding: 10px 14px; border-radius: 12px; background:#3b82f6; color:white; text-decoration:none; font-weight:600; }
+.btn.secondary { background:#223047; }
+.grid { display:grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+code, pre { background:#0e1624; border:1px solid #223047; border-radius: 12px; }
+pre { padding: 14px; overflow:auto; }
+.kpi { font-weight:700; }
+.footer { opacity:.7; font-size: 13px; padding: 24px 0; }
+.small { font-size: 14px; opacity:.85; }

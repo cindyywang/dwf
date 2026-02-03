@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>dwf — Developer Workflow Fastlane</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="nav">
+      <div><strong>dwf</strong></div>
+      <div>
+        <a href="docs.html">Docs</a>
+        <a href="download.html">Download</a>
+        <a href="https://github.com/cindyywang/dwf">GitHub</a>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div class="h1">Ship faster by shortening your feedback loop.</div>
+      <p class="sub">
+        <strong>dwf</strong> is a Rust CLI that runs a fail-fast pipeline (fmt → check → clippy → test),
+        records timings, and reports KPIs like <span class="kpi">TTS</span> (Time-to-Signal) and
+        <span class="kpi">TTG</span> (Time-to-Green).
+      </p>
+      <a class="btn" href="download.html">Download for Linux</a>
+      <a class="btn secondary" href="docs.html">Read docs</a>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Fail fast</h3>
+        <p class="small">Stops at the first failure so you don’t waste time compiling/testing when formatting already fails.</p>
+      </div>
+      <div class="card">
+        <h3>Measure what matters</h3>
+        <p class="small">Logs per-stage timings and produces reports so you can optimize the right bottleneck.</p>
+      </div>
+      <div class="card">
+        <h3>CI-friendly</h3>
+        <p class="small">Non-zero exit on failure. Use it locally or in GitHub Actions.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Example</h3>
+      <pre><code>$ dwf run fast
+Mode: Fast | ok: true
+✅ fmt     257 ms
+✅ check   5658 ms
+✅ clippy  4627 ms
+TTS: 10542 ms
+TTG: 10542 ms</code></pre>
+    </div>
+
+    <div class="card">
+      <h3>Pricing (exam-friendly)</h3>
+      <p class="small"><strong>Free</strong>: Fast pipeline + reports • <strong>Pro (mock)</strong>: JSON export + CI templates + multi-project dashboard</p>
+      <p class="small">For your exam you can keep “Pro” as a concept and still distribute binaries as free downloads.</p>
+    </div>
+
+    <div class="footer">© dwf • Built in Rust • Hosted on GitHub Pages</div>
+  </div>
+</body>
+</html>
