@@ -1,0 +1,8 @@
+[pipeline]
+all_features_in_full = false
+clippy_deny_warnings = true
+stderr_max_lines = 80
+
+[storage]
+dir = ".dwf"
+history_file = "history.jsonl"

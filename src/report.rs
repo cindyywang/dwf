@@ -13,15 +13,26 @@ pub fn print_report(runs: &[RunRecord], last: usize) {
     let avg_tts = avg(&tts);
     let med_tts = median(&tts);
 
-    let avg_ttg = if ttg.is_empty() { None } else { Some(avg(&ttg)) };
-    let med_ttg = if ttg.is_empty() { None } else { Some(median(&ttg)) };
+    let avg_ttg = if ttg.is_empty() {
+        None
+    } else {
+        Some(avg(&ttg))
+    };
+    let med_ttg = if ttg.is_empty() {
+        None
+    } else {
+        Some(median(&ttg))
+    };
 
     let ok_count = runs.iter().filter(|r| r.ok).count();
     let fail_count = count - ok_count;
 
     let mut fail_stage_counts = std::collections::BTreeMap::<String, usize>::new();
     for r in runs.iter().filter(|r| !r.ok) {
-        let k = r.failure_stage.clone().unwrap_or_else(|| "unknown".to_string());
+        let k = r
+            .failure_stage
+            .clone()
+            .unwrap_or_else(|| "unknown".to_string());
         *fail_stage_counts.entry(k).or_insert(0) += 1;
     }
 
@@ -62,5 +73,22 @@ fn median(v: &[u64]) -> u64 {
     } else {
         // even: average of two middle values (integer)
         (s[mid - 1] / 2) + (s[mid] / 2) + ((s[mid - 1] % 2 + s[mid] % 2) / 2)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn median_odd() {
+        let v = vec![5, 1, 9];
+        assert_eq!(median(&v), 5);
+    }
+
+    #[test]
+    fn median_even() {
+        let v = vec![1, 2, 100, 101];
+        assert_eq!(median(&v), 51); // integer average of 2 middle values: (2+100)/2 = 51
     }
 }

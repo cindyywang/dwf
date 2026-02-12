@@ -9,6 +9,7 @@
 </head>
 <body>
   <div class="container">
+
     <div class="nav">
       <div><strong>dwf</strong></div>
       <div>
@@ -20,81 +21,161 @@
 
     <h1>Documentation</h1>
 
+    <!-- Commands -->
     <div class="card">
       <h3>Commands</h3>
-      <pre><code>dwf init            # create dwf.toml
-dwf run fast        # fmt → check → clippy (fail-fast)
-dwf run full        # fast + tests
+      <pre><code>dwf init                     # create dwf.toml
+dwf init --template rust-default
+dwf examples                 # list built-in templates
+dwf run fast                 # fmt → check → clippy (fail-fast)
+dwf run full                 # full validation including tests
 dwf report --last 10
 dwf doctor</code></pre>
     </div>
 
+    <!-- KPIs -->
     <div class="card">
-  <h3>Key Performance Indicators (KPIs)</h3>
+      <h3>Key Performance Indicators (KPIs)</h3>
 
-  <p class="small">
-    <strong>dwf</strong> measures two core metrics that describe the speed and quality of your
-    developer feedback loop.
-  </p>
+      <p class="small">
+        <strong>dwf</strong> measures feedback-loop speed using two core metrics.
+      </p>
 
-  <div class="stats">
-    <div class="stat">
-      <div class="label">TTS</div>
-      <div class="value">Time-to-Signal</div>
-      <div class="small">
-        How quickly you receive the <em>first useful feedback</em> after running <code>dwf</code>
-        (either a failure or a clean result).
+      <div class="stats">
+        <div class="stat">
+          <div class="label">TTS</div>
+          <div class="value">Time-to-Signal</div>
+          <div class="small">
+            Time until the first useful feedback (first failure or success).
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="label">TTG</div>
+          <div class="value">Time-to-Green</div>
+          <div class="small">
+            Time until the full pipeline passes.
+          </div>
+        </div>
+
+        <div class="stat">
+          <div class="label">Pipeline</div>
+          <div class="value">fmt → check → clippy → test</div>
+          <div class="small">
+            Cheap checks first. Stop early on failure.
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="stat">
-      <div class="label">TTG</div>
-      <div class="value">Time-to-Green</div>
-      <div class="small">
-        How long it takes until the <em>entire pipeline passes</em>. This is reported only when
-        everything is successful.
-      </div>
-    </div>
-
-    <div class="stat">
-      <div class="label">Pipeline</div>
-      <div class="value">fmt → check → clippy → test</div>
-      <div class="small">
-        Cheap checks run first so failures are detected as early as possible.
-      </div>
-    </div>
-  </div>
-</div>
-
+    <!-- Pipeline rationale -->
     <div class="card">
-  <h3>Case Study — Sample Results</h3>
+      <h3>Pipeline Rationale</h3>
+      <p class="small">
+        Stages are ordered from cheapest to most expensive. Formatting takes
+        milliseconds, while compilation and tests may take seconds.
+        This minimizes wasted time and shortens iteration cycles.
+      </p>
+    </div>
 
-  <p class="small">
-    The following results were generated using <code>dwf report --last 10</code>
-    on a small Rust project (<code>echo_rs</code>). They illustrate how <strong>dwf</strong>
-    surfaces actionable workflow metrics.
-  </p>
+    <!-- Pipeline config -->
+    <div class="card">
+      <h3>Pipeline Configuration</h3>
 
-  <pre><code>
-dwf report --last 10
+      <p class="small">
+        Pipelines are defined per project using a <code>dwf.toml</code> file
+        placed in the repository root.
+      </p>
 
-Report (last 10 requested, found 3):
-  ok: 2 | failed: 1
-  TTS  avg: 6321 ms | median: 8154 ms
-  TTG  avg: 9348 ms | median: 9348 ms
-  Failure stages:
-    fmt      1
-  </code></pre>
+<pre><code>[pipeline]
+fail_fast = true
 
-  <p class="small"><strong>Interpretation:</strong></p>
-  <ul class="small">
-    <li>One formatting failure was caught almost instantly — demonstrating the value of the fail-fast gate.</li>
-    <li>Median <strong>TTS ≈ 8.1s</strong>, reflecting typical developer feedback time.</li>
-    <li>Median <strong>TTG ≈ 9.3s</strong>, driven primarily by test execution.</li>
-    <li>These results support a workflow of frequent <code>dwf run fast</code> and occasional <code>dwf run full</code>.</li>
-  </ul>
-</div>
+[[pipeline.stage]]
+name = "fmt"
+cmd = ["cargo", "fmt", "--all", "--check"]
+critical = true
+
+[[pipeline.stage]]
+name = "check"
+cmd = ["cargo", "check", "-q"]
+critical = true
+
+[[pipeline.stage]]
+name = "clippy"
+cmd = ["cargo", "clippy", "--all-targets", "--", "-D", "warnings"]
+critical = true
+
+[[pipeline.stage]]
+name = "test"
+cmd = ["cargo", "test", "-q"]
+critical = true
+mode = "full"
+</code></pre>
+
+      <p class="small">
+        Any command-line tool can be added as a stage. This makes dwf extensible
+        without changing its source code.
+      </p>
+    </div>
+
+    <!-- Templates -->
+    <div class="card">
+      <h3>Built-in Templates</h3>
+
+      <p class="small">
+        dwf includes built-in pipeline templates that can be listed and applied:
+      </p>
+
+<pre><code>dwf examples
+dwf init --template rust-default</code></pre>
+
+      <p class="small">
+        Templates provide ready-to-use configurations for common workflows.
+      </p>
+    </div>
+
+    <!-- Tests explanation -->
+    <div class="card">
+      <h3>When Tests Run</h3>
+
+      <p class="small">
+        Tests run only when a test stage exists in <code>dwf.toml</code>
+        and the selected mode includes it.
+      </p>
+
+      <ul class="small">
+        <li><strong>fast mode</strong> — skips slow stages like tests</li>
+        <li><strong>full mode</strong> — runs all configured stages</li>
+      </ul>
+    </div>
+
+    <!-- Case study -->
+    <div class="card">
+      <h3>Case Study — Sample Results</h3>
+
+      <p class="small">
+        The following output was generated using <code>dwf report --last 10</code>
+        on a small Rust project.
+      </p>
+
+<pre><code>Report (last 10 requested, found 3):
+ok: 2 | failed: 1
+TTS avg: 6321 ms | median: 8154 ms
+TTG avg: 9348 ms | median: 9348 ms
+Failure stages:
+fmt 1</code></pre>
+
+      <p class="small"><strong>Interpretation:</strong></p>
+
+      <ul class="small">
+        <li>Formatting failures are detected immediately.</li>
+        <li>Median TTS ≈ 8.1 s reflects real developer feedback time.</li>
+        <li>Median TTG ≈ 9.3 s is dominated by test runtime.</li>
+        <li>Recommended workflow: frequent <code>dwf run fast</code>, occasional <code>dwf run full</code>.</li>
+      </ul>
+    </div>
 
   </div>
 </body>
 </html>
+

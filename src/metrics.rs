@@ -3,7 +3,7 @@ use crate::config;
 use crate::config::Config;
 use anyhow::{Context, Result};
 use serde::{Deserialize, Serialize};
-use std::fs::{self, OpenOptions};
+use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader, Write};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -35,8 +35,12 @@ fn load_cfg_for_storage() -> Result<Config> {
 
 pub fn append_run(run: &RunRecord) -> Result<()> {
     let cfg = load_cfg_for_storage()?;
-    let (dir, file) = config::storage_paths(&cfg);
-    fs::create_dir_all(&dir).context("create .dwf directory")?;
+    use std::path::Path;
+    let dir = Path::new(&cfg.storage.dir);
+    let file = dir.join(&cfg.storage.history_file);
+    if let Some(parent) = file.parent() {
+        std::fs::create_dir_all(parent)?;
+    }
 
     let mut f = OpenOptions::new()
         .create(true)

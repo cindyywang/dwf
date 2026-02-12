@@ -10,14 +10,15 @@ use time::{format_description::well_known::Rfc3339, OffsetDateTime};
 struct CmdResult {
     ok: bool,
     code: Option<i32>,
-    stdout: String,
     stderr: String,
     duration_ms: u64,
 }
 
 pub fn run_pipeline(cfg: &Config, mode: Mode) -> Result<RunRecord> {
     let start = Instant::now();
-    let ts = OffsetDateTime::now_utc().format(&Rfc3339).unwrap_or_else(|_| "unknown".to_string());
+    let ts = OffsetDateTime::now_utc()
+        .format(&Rfc3339)
+        .unwrap_or_else(|_| "unknown".to_string());
 
     let mut steps: Vec<StepRecord> = Vec::new();
 
@@ -104,14 +105,12 @@ fn run_cmd(cfg: &Config, step_name: &str, mut cmd: Command) -> Result<CmdResult>
     let code = out.status.code();
     let ok = out.status.success();
 
-    let stdout = String::from_utf8_lossy(&out.stdout).to_string();
     let stderr_raw = String::from_utf8_lossy(&out.stderr).to_string();
     let stderr = trim_lines(&stderr_raw, cfg.pipeline.stderr_max_lines);
 
     Ok(CmdResult {
         ok,
         code,
-        stdout,
         stderr,
         duration_ms,
     })
@@ -150,7 +149,7 @@ fn cargo_test_cmd(cfg: &Config, mode: Mode) -> Command {
     c
 }
 
-fn trim_lines(s: &str, max_lines: usize) -> String {
+pub(crate) fn trim_lines(s: &str, max_lines: usize) -> String {
     if max_lines == 0 {
         return String::new();
     }
@@ -173,7 +172,10 @@ pub fn print_run_summary(run: &RunRecord) {
     println!("Mode: {:?} | ok: {}", run.mode, run.ok);
     for s in &run.steps {
         let status = if s.ok { "✅" } else { "❌" };
-        println!("  {} {:<6}  {} ms  exit={:?}", status, s.name, s.duration_ms, s.exit_code);
+        println!(
+            "  {} {:<6}  {} ms  exit={:?}",
+            status, s.name, s.duration_ms, s.exit_code
+        );
         if !s.ok && !s.stderr_excerpt.trim().is_empty() {
             println!("--- stderr (excerpt) ---");
             println!("{}", s.stderr_excerpt);
@@ -186,4 +188,33 @@ pub fn print_run_summary(run: &RunRecord) {
         None => println!("TTG: (not green)"),
     }
     println!("Total: {} ms", run.total_ms);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::trim_lines;
+
+    #[test]
+    fn trims_to_max_lines() {
+        let s = "a\nb\nc\nd\ne\n";
+        let out = trim_lines(s, 3);
+
+        assert!(out.contains("a\nb\nc"));
+        assert!(out.contains("truncated"));
+        assert!(!out.contains("d\ne"));
+    }
+
+    #[test]
+    fn no_trim_when_short() {
+        let s = "a\nb\n";
+        let out = trim_lines(s, 5);
+        assert_eq!(out, s);
+    }
+
+    #[test]
+    fn zero_max_returns_empty() {
+        let s = "hello\nworld";
+        let out = trim_lines(s, 0);
+        assert!(out.is_empty());
+    }
 }

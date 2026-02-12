@@ -14,6 +14,10 @@ pub enum Command {
         /// Overwrite existing dwf.toml
         #[arg(long)]
         force: bool,
+
+        /// Initialize dwf.toml from a built-in template (e.g. rust-default)
+        #[arg(long, default_value = "rust-default")]
+        template: String,
     },
 
     /// Run the workflow pipeline (fail-fast)
@@ -33,6 +37,8 @@ pub enum Command {
         #[arg(long, default_value_t = 10)]
         last: usize,
     },
+
+    Examples,
 
     /// Suggest improvements based on environment and recent timings
     Doctor,

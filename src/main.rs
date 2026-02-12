@@ -4,6 +4,7 @@ mod doctor;
 mod metrics;
 mod report;
 mod runner;
+mod templates;
 
 use anyhow::Result;
 use clap::Parser;
@@ -12,10 +13,6 @@ fn main() -> Result<()> {
     let args = cli::Args::parse();
 
     match args.command {
-        cli::Command::Init { force } => {
-            config::init_config(force)?;
-            println!("Initialized dwf.toml");
-        }
         cli::Command::Run { mode, no_save } => {
             let cfg = config::load_config()?;
             let run = runner::run_pipeline(&cfg, mode)?;
@@ -39,8 +36,18 @@ fn main() -> Result<()> {
             let runs = metrics::load_last_runs(20).unwrap_or_default();
             doctor::print_doctor(&cfg, &runs);
         }
+        cli::Command::Examples => {
+            for t in templates::list_templates() {
+                println!("{}", t);
+            }
+        }
+        cli::Command::Init { force, template } => {
+            let cfg = templates::get_template(&template)
+                .ok_or_else(|| anyhow::anyhow!("Unknown template: {}", template))?;
+            config::init_config_with(cfg, force)?;
+            println!("Initialized dwf.toml (template: {})", template);
+        }
     }
 
     Ok(())
 }
-

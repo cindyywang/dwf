@@ -59,7 +59,9 @@ pub fn print_doctor(cfg: &Config, runs: &[RunRecord]) {
     }
 
     if med_clippy > 0 && med_check > 0 && med_clippy > med_check.saturating_mul(2) {
-        println!("\nSuggestion: clippy is dominating; keep it after `cargo check` (already staged).");
+        println!(
+            "\nSuggestion: clippy is dominating; keep it after `cargo check` (already staged)."
+        );
         println!("  Consider running clippy only in --full mode during early iteration.");
     }
 
@@ -71,7 +73,10 @@ pub fn print_doctor(cfg: &Config, runs: &[RunRecord]) {
     // Failure stage distribution
     let mut fails = std::collections::BTreeMap::<String, usize>::new();
     for r in runs.iter().filter(|r| !r.ok) {
-        let st = r.failure_stage.clone().unwrap_or_else(|| "unknown".to_string());
+        let st = r
+            .failure_stage
+            .clone()
+            .unwrap_or_else(|| "unknown".to_string());
         *fails.entry(st).or_insert(0) += 1;
     }
     if !fails.is_empty() {
