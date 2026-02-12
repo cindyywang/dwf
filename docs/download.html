@@ -42,11 +42,24 @@ dwf --help</code></pre>
 
     <div class="card">
       <h3>Use in a Rust project</h3>
-      <pre><code>cd /path/to/your-rust-project
-dwf init
+<pre><code># Go to your Rust project
+cd /path/to/your-project
+
+# Initialize config (from template)
+dwf init --template rust-default
+
+# See available templates
+dwf examples
+
+# Fast iteration loop
 dwf run fast
+
+# Full validation (includes tests)
 dwf run full
-dwf report --last 10</code></pre>
+
+# View performance metrics
+dwf report --last 10
+</code></pre>
     </div>
 
     <div class="footer">Advanced users can verify downloads using the accompanying <code>.sha256</code> file in each release.</div>
